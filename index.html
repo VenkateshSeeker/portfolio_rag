@@ -611,12 +611,29 @@
         right: calc(5vw + 16px);
       }
 
+      @keyframes floatSocials {
+        0% { left: 10vw; bottom: 5vh; }
+        25% { left: 60vw; bottom: 30vh; }
+        50% { left: 40vw; bottom: 70vh; }
+        75% { left: 80vw; bottom: 40vh; }
+        100% { left: 10vw; bottom: 5vh; }
+      }
+
       .social-bar {
-        left: 50%;
-        bottom: 25px;
-        transform: translateX(-50%);
+        position: fixed;
+        left: 10vw;
+        bottom: 5vh;
         flex-direction: row;
         gap: 0.75rem;
+        opacity: 0.35;
+        animation: floatSocials 45s infinite ease-in-out;
+        z-index: 2000;
+        pointer-events: auto;
+      }
+
+      .social-bar:hover, .social-bar:active {
+        opacity: 1;
+        animation-play-state: paused;
       }
 
       .social-bar a {
