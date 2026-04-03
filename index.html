@@ -485,7 +485,8 @@
       color: #374151;
     }
 
-    .form-group input, .form-group textarea {
+    .form-group input,
+    .form-group textarea {
       padding: 0.75rem;
       border: 1px solid #d1d5db;
       border-radius: 8px;
@@ -494,7 +495,8 @@
       transition: border-color 0.2s;
     }
 
-    .form-group input:focus, .form-group textarea:focus {
+    .form-group input:focus,
+    .form-group textarea:focus {
       outline: none;
       border-color: #3b82f6;
       background: white;
@@ -527,8 +529,14 @@
       font-weight: 500;
       min-height: 20px;
     }
-    .status-success { color: #10b981; }
-    .status-error { color: #ef4444; }
+
+    .status-success {
+      color: #10b981;
+    }
+
+    .status-error {
+      color: #ef4444;
+    }
 
     .floating-btn:hover {
       background: rgba(37, 99, 235, 0.9);
@@ -552,7 +560,7 @@
         height: 100%;
         max-height: 100%;
         border-radius: 16px;
-        box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
       }
 
       .spine {
@@ -573,7 +581,7 @@
         height: 90vh;
         z-index: 1500;
         border-radius: 16px;
-        box-shadow: 0 15px 50px rgba(0,0,0,0.6);
+        box-shadow: 0 15px 50px rgba(0, 0, 0, 0.6);
         overflow: hidden;
       }
 
@@ -657,7 +665,8 @@
     </div>
   </div>
 
-  <a href="/data/bandaruvenkateshrao_resume.pdf" download id="resumeDownloadBtn" class="floating-btn download-btn" title="Click to download resume">📄</a>
+  <a href="/data/bandaruvenkateshrao_resume.pdf" download id="resumeDownloadBtn" class="floating-btn download-btn"
+    title="Click to download resume">📄</a>
   <button id="contactToggleBtn" class="floating-btn contact-btn" title="Contact Me">✉️</button>
 
   <script>
@@ -755,7 +764,7 @@
     if (contactForm) {
       contactForm.addEventListener('submit', async (e) => {
         e.preventDefault();
-        
+
         const name = document.getElementById('contactName').value;
         const email = document.getElementById('contactEmail').value;
         const message = document.getElementById('contactMessage').value;
@@ -773,9 +782,9 @@
           });
 
           if (!res.ok) throw new Error('Failed to send');
-          
+
           contactForm.reset();
-          contactStatus.textContent = 'Message sent successfully! Check your email.';
+          contactStatus.textContent = 'Thankyou, for visiting my site.';
           contactStatus.className = 'contact-status status-success';
         } catch (err) {
           contactStatus.textContent = 'Error sending message. Please try again later.';
