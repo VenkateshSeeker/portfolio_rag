@@ -601,7 +601,8 @@
 
       .contact-btn {
         display: flex;
-        top: calc(5vh + 16px);
+        top: auto;
+        bottom: calc(5vh + 148px);
         right: calc(5vw + 16px);
       }
 
@@ -611,17 +612,29 @@
       }
 
       .social-bar {
-        left: 0.5rem;
-        bottom: 50%;
-        transform: translateY(50%);
-        gap: 0.5rem;
+        left: 50%;
+        bottom: 1.5rem;
+        transform: translateX(-50%);
+        flex-direction: row;
+        gap: 0.75rem;
+      }
+
+      .social-bar a {
+        width: 32px;
+        height: 32px;
+        font-size: 1rem;
+      }
+
+      .site-footer {
+        bottom: 0.25rem;
+        font-size: 0.65rem;
       }
     }
 
     /* Footer & Social Bar */
     .social-bar {
       position: fixed;
-      left: 1.5rem;
+      left: 0.75rem;
       bottom: 2rem;
       display: flex;
       flex-direction: column;
