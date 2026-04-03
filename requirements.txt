@@ -1,0 +1,9 @@
+langchain
+langchain-community
+pypdf
+rank-bm25
+python-dotenv
+openai
+fastapi
+uvicorn
+pydantic

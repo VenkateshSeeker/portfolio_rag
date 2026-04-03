@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Venkatesh Virtually | AI Resume</title>
+  <style>
+    :root {
+      --bg-primary: #0f172a;
+      --bg-secondary: #1e293b;
+      --terminal-bg: #0d1117;
+      --terminal-text: #e6edf3;
+      --terminal-accent: #3fb950;
+      --paper: #fefdf8;
+      --paper-text: #1f2937;
+      --paper-muted: #6b7280;
+      --spine-shadow: rgba(0, 0, 0, 0.3);
+      --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.25);
+      --font-mono: 'Courier New', Courier, monospace;
+      --font-sans: system-ui, -apple-system, sans-serif;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      background: var(--bg-primary);
+      color: var(--terminal-text);
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* Animated Background */
+    .bg-animation {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #111827 100%);
+      z-index: -2;
+      overflow: hidden;
+    }
+
+    .bg-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(60px);
+      opacity: 0.4;
+      animation: float 15s infinite ease-in-out;
+    }
+
+    .bg-orb:nth-child(1) {
+      width: 400px;
+      height: 400px;
+      background: #3b82f6;
+      top: -10%;
+      left: 10%;
+      animation-delay: 0s;
+    }
+
+    .bg-orb:nth-child(2) {
+      width: 300px;
+      height: 300px;
+      background: #8b5cf6;
+      bottom: 10%;
+      right: 15%;
+      animation-delay: -5s;
+    }
+
+    .bg-orb:nth-child(3) {
+      width: 250px;
+      height: 250px;
+      background: #10b981;
+      top: 40%;
+      left: 60%;
+      animation-delay: -10s;
+    }
+
+    @keyframes float {
+
+      0%,
+      100% {
+        transform: translate(0, 0) scale(1);
+      }
+
+      33% {
+        transform: translate(30px, -40px) scale(1.05);
+      }
+
+      66% {
+        transform: translate(-20px, 20px) scale(0.95);
+      }
+    }
+
+    /* Book Container */
+    .book-wrapper {
+      width: 90vw;
+      max-width: 1200px;
+      height: 85vh;
+      perspective: 1500px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .book {
+      display: flex;
+      width: 100%;
+      height: 100%;
+      background: #2a2d35;
+      border-radius: 12px;
+      box-shadow: var(--shadow-soft), 0 0 0 1px rgba(255, 255, 255, 0.05);
+      overflow: hidden;
+      transform-style: preserve-3d;
+      transition: transform 0.5s ease;
+    }
+
+    .book:hover {
+      transform: rotateX(1deg) rotateY(0deg);
+    }
+
+    .page {
+      flex: 1;
+      height: 100%;
+      padding: 2rem;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .page::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+
+    .left.page {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .left.page::before {
+      background: var(--terminal-bg);
+      z-index: 1;
+    }
+
+    .right.page {
+      background: var(--paper);
+      color: var(--paper-text);
+      box-shadow: inset 10px 0 20px rgba(0, 0, 0, 0.05);
+    }
+
+    .spine {
+      width: 24px;
+      height: 100%;
+      background: linear-gradient(90deg, #1a1c23 0%, #3a3d45 40%, #3a3d45 60%, #1a1c23 100%);
+      box-shadow: 0 0 15px var(--spine-shadow);
+      z-index: 10;
+      flex-shrink: 0;
+    }
+
+    /* Terminal UI */
+    .terminal-header {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid #30363d;
+    }
+
+    .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+
+    .dot.red {
+      background: #ff5f56;
+    }
+
+    .dot.yellow {
+      background: #ffbd2e;
+    }
+
+    .dot.green {
+      background: #27c93f;
+    }
+
+    .terminal-title {
+      margin-left: auto;
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: #8b949e;
+    }
+
+    .chat-container {
+      position: relative;
+      z-index: 2;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .messages-box {
+      flex: 1;
+      overflow-y: auto;
+      padding-right: 10px;
+      margin-bottom: 1rem;
+      scrollbar-width: thin;
+      scrollbar-color: #30363d transparent;
+    }
+
+    .messages-box::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .messages-box::-webkit-scrollbar-thumb {
+      background: #30363d;
+      border-radius: 3px;
+    }
+
+    .msg {
+      margin-bottom: 12px;
+      line-height: 1.5;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .msg.user {
+      color: #58a6ff;
+    }
+
+    .msg.ai {
+      color: var(--terminal-accent);
+    }
+
+    .msg-prefix {
+      font-family: var(--font-mono);
+      font-weight: bold;
+      margin-right: 6px;
+    }
+
+    .input-area {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      background: #161b22;
+      border: 1px solid #30363d;
+      border-radius: 8px;
+      padding: 0.5rem;
+    }
+
+    .prompt-symbol {
+      color: var(--terminal-accent);
+      font-family: var(--font-mono);
+      margin-right: 8px;
+    }
+
+    .chat-input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      outline: none;
+      color: var(--terminal-text);
+      font-family: var(--font-mono);
+      font-size: 0.95rem;
+    }
+
+    .chat-input::placeholder {
+      color: #484f58;
+    }
+
+    .send-btn {
+      background: #238636;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      padding: 6px 12px;
+      cursor: pointer;
+      font-family: var(--font-mono);
+      transition: background 0.2s;
+    }
+
+    .send-btn:hover {
+      background: #2ea043;
+    }
+
+    .send-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    /* Resume UI */
+    .resume-content {
+      height: 100%;
+      overflow-y: auto;
+      padding-right: 10px;
+      scrollbar-width: thin;
+      scrollbar-color: #d1d5db transparent;
+    }
+
+    .resume-content::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .resume-content::-webkit-scrollbar-thumb {
+      background: #d1d5db;
+      border-radius: 3px;
+    }
+
+    .resume-header {
+      text-align: center;
+      margin-bottom: 1.5rem;
+      border-bottom: 2px solid #e5e7eb;
+      padding-bottom: 1rem;
+    }
+
+    .resume-header h1 {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: #111827;
+      letter-spacing: -0.5px;
+    }
+
+    .resume-header p {
+      color: var(--paper-muted);
+      font-size: 0.95rem;
+      margin-top: 0.25rem;
+    }
+
+    .resume-section {
+      margin-bottom: 1.25rem;
+    }
+
+    .section-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #1f2937;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .section-title::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: #d1d5db;
+      margin-left: 8px;
+    }
+
+    .exp-item {
+      margin-bottom: 0.8rem;
+      padding-left: 12px;
+      border-left: 3px solid #3b82f6;
+    }
+
+    .exp-role {
+      font-weight: 600;
+    }
+
+    .exp-company {
+      color: var(--paper-muted);
+      font-size: 0.9rem;
+    }
+
+    .exp-desc {
+      font-size: 0.9rem;
+      margin-top: 4px;
+      line-height: 1.4;
+      color: #374151;
+    }
+
+    .skill-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .skill-tag {
+      background: #f3f4f6;
+      padding: 4px 10px;
+      border-radius: 99px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: #374151;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(5px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .pdf-viewer {
+      width: 100%;
+      height: 100%;
+      border: none;
+      border-radius: 0 12px 12px 0;
+    }
+
+    .floating-btn {
+      display: none;
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: rgba(59, 130, 246, 0.6);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      color: white;
+      font-size: 24px;
+      border: none;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+      z-index: 2000;
+      cursor: pointer;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.2s, background 0.2s;
+    }
+
+    .floating-btn:hover {
+      background: rgba(37, 99, 235, 0.9);
+      transform: scale(1.05);
+    }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      body {
+        align-items: center;
+      }
+
+      .book-wrapper {
+        height: 100vh;
+        width: 100vw;
+        padding: 5vh 5vw;
+      }
+
+      .book {
+        flex-direction: column;
+        height: 100%;
+        max-height: 100%;
+        border-radius: 16px;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+      }
+
+      .spine {
+        display: none;
+      }
+
+      .left.page {
+        height: 100%;
+        padding: 1.25rem;
+      }
+
+      .right.page {
+        display: none;
+        position: fixed;
+        top: 5vh;
+        left: 5vw;
+        width: 90vw;
+        height: 90vh;
+        z-index: 1500;
+        border-radius: 16px;
+        box-shadow: 0 15px 50px rgba(0,0,0,0.6);
+        overflow: hidden;
+      }
+
+      .right.page.active {
+        display: block;
+      }
+
+      .pdf-viewer {
+        border-radius: 16px;
+      }
+
+      .floating-btn {
+        display: flex;
+        top: calc(5vh + 16px);
+        bottom: auto;
+        right: calc(5vw + 16px);
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="bg-animation">
+    <div class="bg-orb"></div>
+    <div class="bg-orb"></div>
+    <div class="bg-orb"></div>
+  </div>
+
+  <div class="book-wrapper">
+    <div class="book">
+      <div class="page left">
+        <div class="terminal-header">
+          <div class="dot red"></div>
+          <div class="dot yellow"></div>
+          <div class="dot green"></div>
+          <div class="terminal-title">venkatesh@ai:~</div>
+        </div>
+        <div class="chat-container">
+          <div class="messages-box" id="messagesBox">
+            <div class="msg ai"><span class="msg-prefix">➜</span> Welcome to my website. Ask anything about me to my
+              assistent.</div>
+          </div>
+          <div class="input-area">
+            <span class="prompt-symbol">$</span>
+            <input type="text" class="chat-input" id="chatInput" placeholder="Type your question and press Enter..."
+              autocomplete="off">
+            <button class="send-btn" id="sendBtn">SEND</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="spine"></div>
+
+      <div class="page right" style="padding: 0;">
+        <iframe src="/data/bandaruvenkateshrao_resume.pdf" class="pdf-viewer" title="Resume PDF"></iframe>
+      </div>
+    </div>
+  </div>
+
+  <button id="resumeToggleBtn" class="floating-btn">📄</button>
+
+  <script>
+    const messagesBox = document.getElementById('messagesBox');
+    const chatInput = document.getElementById('chatInput');
+    const sendBtn = document.getElementById('sendBtn');
+    let isProcessing = false;
+
+    function appendMessage(role, text, isTyping = false) {
+      const msgDiv = document.createElement('div');
+      msgDiv.className = `msg ${role}`;
+      msgDiv.innerHTML = `<span class="msg-prefix">${role === 'user' ? '➜' : '✓'}</span>`;
+      const contentSpan = document.createElement('span');
+      contentSpan.textContent = text;
+      msgDiv.appendChild(contentSpan);
+      messagesBox.appendChild(msgDiv);
+      messagesBox.scrollTop = messagesBox.scrollHeight;
+      return contentSpan;
+    }
+
+    async function handleUserSubmit() {
+      const userText = chatInput.value.trim();
+      if (!userText || isProcessing) return;
+
+      chatInput.value = '';
+      appendMessage('user', userText);
+      isProcessing = true;
+      sendBtn.disabled = true;
+
+      const aiContentSpan = appendMessage('ai', '');
+      aiContentSpan.textContent = 'Searching resume context...';
+
+      try {
+        const res = await fetch('/ask', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ question: userText, session_id: 'default' })
+        });
+
+        if (!res.ok) {
+          throw new Error('HTTP status ' + res.status);
+        }
+
+        const data = await res.json();
+        const answer = data.answer;
+
+        aiContentSpan.textContent = '';
+        await typeText(aiContentSpan, answer);
+      } catch (err) {
+        console.error(err);
+        aiContentSpan.textContent = '❌ Connection error. Please ensure backend is running.';
+      } finally {
+        isProcessing = false;
+        sendBtn.disabled = false;
+        chatInput.focus();
+      }
+    }
+
+    async function typeText(element, text) {
+      for (let i = 0; i < text.length; i++) {
+        element.textContent += text[i];
+        messagesBox.scrollTop = messagesBox.scrollHeight;
+        await new Promise(res => setTimeout(res, 5 + Math.random() * 10));
+      }
+    }
+
+    sendBtn.addEventListener('click', handleUserSubmit);
+    chatInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') handleUserSubmit();
+    });
+
+    // Focus input on load
+    window.addEventListener('DOMContentLoaded', () => chatInput.focus());
+
+    // Mobile Resume Toggle
+    const resumeToggleBtn = document.getElementById('resumeToggleBtn');
+    const rightPage = document.querySelector('.right.page');
+
+    if (resumeToggleBtn && rightPage) {
+      resumeToggleBtn.addEventListener('click', () => {
+        rightPage.classList.toggle('active');
+        if (rightPage.classList.contains('active')) {
+          resumeToggleBtn.innerHTML = '✖';
+        } else {
+          resumeToggleBtn.innerHTML = '📄';
+        }
+      });
+    }
+  </script>
+</body>
+
+</html>
