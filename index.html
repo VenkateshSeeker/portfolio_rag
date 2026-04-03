@@ -415,18 +415,9 @@
       }
     }
 
-    .pdf-viewer {
-      width: 100%;
-      height: 100%;
-      border: none;
-      border-radius: 0 12px 12px 0;
-    }
-
     .floating-btn {
-      display: none;
+      display: flex;
       position: fixed;
-      bottom: 24px;
-      right: 24px;
       width: 56px;
       height: 56px;
       border-radius: 50%;
@@ -442,7 +433,102 @@
       align-items: center;
       justify-content: center;
       transition: transform 0.2s, background 0.2s;
+      text-decoration: none;
     }
+
+    .download-btn {
+      bottom: 24px;
+      right: 24px;
+    }
+
+    .contact-btn {
+      display: none;
+    }
+
+    .contact-page {
+      display: flex;
+      flex-direction: column;
+      padding: 3rem;
+      background: var(--paper);
+      overflow-y: auto;
+    }
+
+    .contact-header {
+      margin-bottom: 2rem;
+    }
+
+    .contact-header h2 {
+      font-size: 2rem;
+      color: #111827;
+      margin-bottom: 0.5rem;
+    }
+
+    .contact-header p {
+      color: #6b7280;
+    }
+
+    .contact-form {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .form-group label {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #374151;
+    }
+
+    .form-group input, .form-group textarea {
+      padding: 0.75rem;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      font-family: inherit;
+      background: #f9fafb;
+      transition: border-color 0.2s;
+    }
+
+    .form-group input:focus, .form-group textarea:focus {
+      outline: none;
+      border-color: #3b82f6;
+      background: white;
+    }
+
+    .contact-submit {
+      padding: 0.85rem;
+      background: #3b82f6;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .contact-submit:hover {
+      background: #2563eb;
+    }
+
+    .contact-submit:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+    }
+
+    .contact-status {
+      text-align: center;
+      font-size: 0.9rem;
+      font-weight: 500;
+      min-height: 20px;
+    }
+    .status-success { color: #10b981; }
+    .status-error { color: #ef4444; }
 
     .floating-btn:hover {
       background: rgba(37, 99, 235, 0.9);
@@ -495,14 +581,19 @@
         display: block;
       }
 
-      .pdf-viewer {
-        border-radius: 16px;
+      .contact-page {
+        padding: 1.5rem;
+        overflow-y: auto;
       }
 
-      .floating-btn {
+      .contact-btn {
         display: flex;
         top: calc(5vh + 16px);
-        bottom: auto;
+        right: calc(5vw + 16px);
+      }
+
+      .download-btn {
+        bottom: calc(5vh + 16px);
         right: calc(5vw + 16px);
       }
     }
@@ -541,13 +632,33 @@
 
       <div class="spine"></div>
 
-      <div class="page right" style="padding: 0;">
-        <iframe src="/data/bandaruvenkateshrao_resume.pdf" class="pdf-viewer" title="Resume PDF"></iframe>
+      <div class="page right contact-page">
+        <div class="contact-header">
+          <h2>Contact Venkatesh</h2>
+          <p>Have a question or a proposal? Shoot me a message!</p>
+        </div>
+        <form id="contactForm" class="contact-form">
+          <div class="form-group">
+            <label for="contactName">Name</label>
+            <input type="text" id="contactName" required placeholder="John Doe">
+          </div>
+          <div class="form-group">
+            <label for="contactEmail">Email</label>
+            <input type="email" id="contactEmail" required placeholder="john@example.com">
+          </div>
+          <div class="form-group">
+            <label for="contactMessage">Message</label>
+            <textarea id="contactMessage" rows="5" required placeholder="Hello Venkatesh, I'd like to..."></textarea>
+          </div>
+          <button type="submit" id="contactSubmit" class="contact-submit">Send Message 🚀</button>
+          <div id="contactStatus" class="contact-status"></div>
+        </form>
       </div>
     </div>
   </div>
 
-  <button id="resumeToggleBtn" class="floating-btn">📄</button>
+  <a href="/data/bandaruvenkateshrao_resume.pdf" download id="resumeDownloadBtn" class="floating-btn download-btn" title="Click to download resume">📄</a>
+  <button id="contactToggleBtn" class="floating-btn contact-btn" title="Contact Me">✉️</button>
 
   <script>
     const messagesBox = document.getElementById('messagesBox');
@@ -621,17 +732,58 @@
     // Focus input on load
     window.addEventListener('DOMContentLoaded', () => chatInput.focus());
 
-    // Mobile Resume Toggle
-    const resumeToggleBtn = document.getElementById('resumeToggleBtn');
+    // Mobile Contact Form Toggle
+    const contactToggleBtn = document.getElementById('contactToggleBtn');
     const rightPage = document.querySelector('.right.page');
 
-    if (resumeToggleBtn && rightPage) {
-      resumeToggleBtn.addEventListener('click', () => {
+    if (contactToggleBtn && rightPage) {
+      contactToggleBtn.addEventListener('click', () => {
         rightPage.classList.toggle('active');
         if (rightPage.classList.contains('active')) {
-          resumeToggleBtn.innerHTML = '✖';
+          contactToggleBtn.innerHTML = '✖';
         } else {
-          resumeToggleBtn.innerHTML = '📄';
+          contactToggleBtn.innerHTML = '✉️';
+        }
+      });
+    }
+
+    // Contact Form Submission
+    const contactForm = document.getElementById('contactForm');
+    const contactSubmit = document.getElementById('contactSubmit');
+    const contactStatus = document.getElementById('contactStatus');
+
+    if (contactForm) {
+      contactForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const name = document.getElementById('contactName').value;
+        const email = document.getElementById('contactEmail').value;
+        const message = document.getElementById('contactMessage').value;
+
+        contactSubmit.disabled = true;
+        contactSubmit.textContent = 'Sending...';
+        contactStatus.textContent = '';
+        contactStatus.className = 'contact-status';
+
+        try {
+          const res = await fetch('/contact', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, email, message })
+          });
+
+          if (!res.ok) throw new Error('Failed to send');
+          
+          contactForm.reset();
+          contactStatus.textContent = 'Message sent successfully! Check your email.';
+          contactStatus.className = 'contact-status status-success';
+        } catch (err) {
+          contactStatus.textContent = 'Error sending message. Please try again later.';
+          contactStatus.className = 'contact-status status-error';
+          console.error(err);
+        } finally {
+          contactSubmit.disabled = false;
+          contactSubmit.textContent = 'Send Message 🚀';
         }
       });
     }
